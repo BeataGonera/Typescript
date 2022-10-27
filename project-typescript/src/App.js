@@ -23,18 +23,18 @@ function App() {
     if(localStorage.getItem('user') !== null){
       const isUser = JSON.parse(localStorage.getItem('user'))
       setUser(isUser.username)
+      navigate('/home')
+    }else{
+      navigate('/login')
     }
-  },[user])
 
-    if(user){
-      return (
-     <AuthenticatedHomePage username={username} user={user} handleLogOut={handleLogOut}/> 
-      );
-    }
+  },[])
+
 
     return(
         <Routes>
-        <Route path='/login' element={ <Login user={user} />}/>
+        <Route path='/home' element={ <AuthenticatedHomePage username={username} user={user} handleLogOut={handleLogOut}/>}/>
+        <Route path='/login' element={ <Login user={user} setUser={setUser} />}/>
         </Routes>
       )
     
