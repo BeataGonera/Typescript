@@ -1,26 +1,35 @@
 import { Input } from './Input'
 import { Button } from '../shared/Button'
-import { useState } from 'react'
+import { useState, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export const Login = ({handleLogIn, user, setUser}) => {
+interface LoginProps {
+    handleLogOut: () => void;
+    user: string;
+    setUser: (user: string) => void;
+}
+
+export const Login: FC<LoginProps> = ({handleLogOut, user, setUser}) => {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const navigate = useNavigate()
 
-    const userObject = {
+    const userObject: {username: string, password: string} = {
         username: username,
         password: password
       }
 
-    const handleSubmit = () => {
+    const handleSubmit = (): void => {
         localStorage.setItem('user', JSON.stringify({username, password}))
         navigate('/home')
-        const userFromLocalStorage = JSON.parse(localStorage.getItem("user"))
-        setUser(userFromLocalStorage.username)
-    }
+        const userFromLocalStorage = localStorage.getItem('user')
+        if(userFromLocalStorage){
+            const userParsed = JSON.parse(userFromLocalStorage)
+        setUser(userParsed.username)
+
+    }}
 
 
     return ( 
@@ -29,7 +38,7 @@ export const Login = ({handleLogIn, user, setUser}) => {
             <Input inputType={"text"} setInputValue={setUsername}/>
             <label>Password:</label>
             <Input inputType={"password"} setInputValue={setPassword}/>
-            <Button buttonText={"Log in"} handleLogIn={handleLogIn} user={user}/>
+            <Button buttonText={"Log in"} handleLogOut={handleLogOut} user={user}/>
         </form>
      );
 }
